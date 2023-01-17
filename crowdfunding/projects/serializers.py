@@ -2,6 +2,12 @@ from rest_framework import serializers
 
 from .models import Project, Pledge
 
+
+class PledgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pledge
+        fields = ['id','amount', 'comment', 'anonymous', 'project', 'supporter']
+
 class ProjectSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     title = serializers.CharField(max_length=200)
@@ -11,15 +17,12 @@ class ProjectSerializer(serializers.Serializer):
     is_open = serializers.BooleanField()
     date_created = serializers.DateTimeField()
     owner = serializers.CharField(max_length=200)
+
     
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
 
-class PledgeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pledge
-        fields = ['id','amount', 'comment', 'anonymous', 'project', 'supporter']
-
-
+class ProjectDetailSerializer(ProjectSerializer):
+    pledges = PledgeSerializer(many=True, read_only=True)
         
         #fields = '__all__' can be done this way too
