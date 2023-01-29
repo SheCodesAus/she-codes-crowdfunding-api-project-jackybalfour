@@ -4,18 +4,18 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import CustomUser
-from .serializers import CustumUserSerializer
+from .serializers import CustomUserSerializer
 
 
 class CustomUserList(APIView):
 
     def get(self,request):
         users= CustomUser.objects.all()
-        serializer = CustumUserSerializer(users, many=True)
+        serializer = CustomUserSerializer(users, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = CustumUserSerializer(data=request.data)
+        serializer = CustomUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -29,7 +29,7 @@ class CustomUserDetail(APIView):
         except CustomUser.DoesNotExist:
             raise Http404
         
-    def get(self, resquest, pk):
+    def get(self, request, pk):
         user = self.get_object(pk)
-        serializer = CustumUserSerializer(user)
+        serializer = CustomUserSerializer(user)
         return Response(serializer.data)
